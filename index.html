@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Asistencia</title>
+    <script>
+        async function obtenerIP() {
+            let response = await fetch('https://api.ipify.org?format=json');
+            let data = await response.json();
+            return data.ip;
+        }
+
+        async function enviarFormulario(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const nombre = document.getElementById('nombre').value;
+            const horaIngreso = document.getElementById('horaIngreso').value;
+            const horaSalida = document.getElementById('horaSalida').value;
+            const horaIngresoAlmuerzo = document.getElementById('horaIngresoAlmuerzo').value;
+            const horaSalidaAlmuerzo = document.getElementById('horaSalidaAlmuerzo').value;
+            const ip = await obtenerIP();
+
+            const datos = {
+                email: email,
+                nombre: nombre,
+                horaIngreso: horaIngreso,
+                horaSalida: horaSalida,
+                horaIngresoAlmuerzo: horaIngresoAlmuerzo,
+                horaSalidaAlmuerzo: horaSalidaAlmuerzo,
+                ip: ip
+            };
+
+            const response = await fetch('TU_SCRIPT_DE_GOOGLE_APPS_SCRIPT_URL', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datos)
+            });
+
+            if (response.ok) {
+                alert('Formulario enviado correctamente');
+            } else {
+                alert('Error al enviar el formulario');
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Formulario de Asistencia</h1>
+    <form onsubmit="enviarFormulario(event)">
+        <label for="nombre">Nombre:</label>
+        <select id="nombre" required>
+            <option value="Nombre 1">Nombre 1</option>
+            <option value="Nombre 2">Nombre 2</option>
+            <!-- Agrega más nombres según sea necesario -->
+        </select><br><br>
+
+        <label for="horaIngreso">Hora de Ingreso:</label>
+        <input type="time" id="horaIngreso" required><br><br>
+
+        <label for="horaSalida">Hora de Salida:</label>
+        <input type="time" id="horaSalida" required><br><br>
+
+        <label for="horaIngresoAlmuerzo">Hora de Ingreso de Almuerzo:</label>
+        <input type="time" id="horaIngresoAlmuerzo" required><br><br>
+
+        <label for="horaSalidaAlmuerzo">Hora de Salida de Almuerzo:</label>
+        <input type="time" id="horaSalidaAlmuerzo" required><br><br>
+
+        <input type="submit" value="Enviar">
+    </form>
+</body>
+</html>
